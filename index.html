@@ -4,25 +4,31 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Reisewege auf der Ebstorfer Weltkarte</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&display=swap" rel="stylesheet">
     <style>
         body {
             margin: 0;
             padding: 0;
-            background-color: #f4e4bc;
+            background-color: #e8d5a8;
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
             font-family: 'Georgia', serif;
             text-align: center;
+            min-height: 100vh;
         }
 
         h1 {
-            padding: 20px 20px 5px;
-            font-size: 1.4rem;
-            color: #333;
+            padding: 24px 20px 4px;
+            font-size: 1.5rem;
+            color: #3a2a14;
+            font-family: 'Cinzel', Georgia, serif;
+            letter-spacing: 0.04em;
         }
 
         .subtitle {
             font-size: 0.9rem;
-            color: #666;
-            margin-bottom: 15px;
+            color: #7a6a52;
+            margin-bottom: 18px;
+            font-style: italic;
         }
 
         .map-container {
@@ -30,6 +36,12 @@
             width: 100%;
             max-width: 1000px;
             margin: 0 auto;
+            border: 4px solid #8a7456;
+            border-radius: 6px;
+            box-shadow:
+                0 4px 20px rgba(0,0,0,0.3),
+                inset 0 0 30px rgba(0,0,0,0.1);
+            overflow: hidden;
         }
 
         .map-image {
@@ -78,7 +90,7 @@
             margin-top: 4px;
             font-size: 0.65rem;
             font-weight: bold;
-            font-family: Georgia, serif;
+            font-family: 'Cinzel', Georgia, serif;
             letter-spacing: 0.02em;
         }
         .avatar-card .avatar-color {
@@ -138,49 +150,34 @@
             cursor: default;
         }
 
+        /* Tooltip */
         .hotspot .tooltip-text {
             display: none;
             position: absolute;
-            bottom: 120%;
+            bottom: 130%;
             left: 50%;
             transform: translateX(-50%);
-            background: rgba(0,0,0,0.85);
-            color: #fff;
-            padding: 4px 10px;
-            border-radius: 5px;
+            background: rgba(42, 30, 12, 0.92);
+            color: #f4e4bc;
+            padding: 5px 12px;
+            border-radius: 6px;
             font-size: 0.75rem;
+            font-family: 'Cinzel', Georgia, serif;
             white-space: nowrap;
             pointer-events: none;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+        }
+        .hotspot .tooltip-text::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 5px solid transparent;
+            border-top-color: rgba(42, 30, 12, 0.92);
         }
         .hotspot:hover .tooltip-text {
             display: block;
-        }
-
-        .legend {
-            display: flex;
-            gap: 25px;
-            justify-content: center;
-            padding: 15px;
-            flex-wrap: wrap;
-        }
-        .legend-item {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            font-size: 0.9rem;
-            color: #333;
-        }
-        .legend-dot {
-            width: 14px; height: 14px;
-            border-radius: 50%;
-            border: 2px solid #fff;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.3);
-        }
-        .legend-ellipse {
-            width: 24px; height: 14px;
-            border-radius: 50%;
-            border: 2px solid #4080d8;
-            background: rgba(64,128,216,0.2);
         }
 
         /* Brandan Ellipse */
@@ -265,6 +262,15 @@
         #y4 { top: 29.1%; left: 40.9%; }
         #y5 { top: 12.2%; left: 44.6%; }
         #y6 { top: 60.5%; left: 44.1%; }
+
+        /* Footer */
+        .footer {
+            padding: 16px;
+            font-size: 0.75rem;
+            color: #9a8a6a;
+            font-style: italic;
+        }
+
         /* === RESPONSIVE: Smartphone === */
         @media (max-width: 600px) {
             h1 {
@@ -275,6 +281,10 @@
                 font-size: 0.75rem;
                 margin-bottom: 8px;
             }
+            .map-container {
+                border-width: 3px;
+                border-radius: 4px;
+            }
             .hotspot {
                 width: 4.5%;
                 height: 4.5%;
@@ -282,31 +292,28 @@
                 border-width: 1.5px;
             }
             .avatare-legend {
-                padding: 4px 2px;
-                border-radius: 6px;
-                bottom: 1%;
-                right: 1%;
+                padding: 3px 2px;
+                border-radius: 5px;
+                bottom: 0.5%;
+                right: 0.5%;
+                gap: 0;
             }
             .avatar-card {
-                padding: 2px 4px;
+                padding: 2px 3px;
             }
             .avatar-card .avatar-img {
-                width: 30px;
-                height: 40px;
+                width: 20px;
+                height: 26px;
+                border-radius: 2px;
             }
             .avatar-card .avatar-name {
-                font-size: 0.45rem;
+                font-size: 0.35rem;
+                margin-top: 2px;
             }
             .avatar-card .avatar-color {
-                width: 7px;
-                height: 7px;
-            }
-            .legend {
-                gap: 12px;
-                padding: 10px;
-            }
-            .legend-item {
-                font-size: 0.75rem;
+                width: 5px;
+                height: 5px;
+                margin-top: 1px;
             }
         }
     </style>
@@ -345,22 +352,20 @@
             </div>
         </div>
 
-        <!-- SVG Overlay: Pfeile + Ellipse -->
+        <!-- SVG Overlay: Pfeile -->
         <svg class="overlay-svg" id="svgOverlay" viewBox="0 0 1000 1000" preserveAspectRatio="none">
             <defs>
-                <marker id="ah-o" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
-                    <path d="M0,0 L8,3 L0,6 Z" fill="#ed7500" fill-opacity="0.7"/>
+                <marker id="ah-o" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                    <path d="M0,0 L10,3.5 L0,7 Z" fill="#ed7500"/>
                 </marker>
-                <marker id="ah-y" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
-                    <path d="M0,0 L8,3 L0,6 Z" fill="#f2c000" fill-opacity="0.7"/>
+                <marker id="ah-y" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                    <path d="M0,0 L10,3.5 L0,7 Z" fill="#f2c000"/>
                 </marker>
             </defs>
-            <!-- Pfeile werden per JS generiert -->
         </svg>
 
         <!-- BLAUE Ellipse (Brandan) -->
-        <div class="brandan-ellipse" id="brandanEllipse">
-        </div>
+        <div class="brandan-ellipse" id="brandanEllipse"></div>
 
         <!-- ORANGE Hotspots (Herzog Ernst) - klickbar -->
         <a href="1_pdf Station 1.pdf" class="hotspot orange clickable" id="o1" target="_blank"><span class="tooltip-text">1. Reich und Baiern</span>1</a>
@@ -373,7 +378,7 @@
         <div class="hotspot orange" id="o8"><span class="tooltip-text">5d. Rom</span>5d</div>
         <div class="hotspot orange" id="o9"><span class="tooltip-text">5e. Bamberg</span>5e</div>
 
-        <!-- YELLOW Hotspots (Alexander) - nicht klickbar -->
+        <!-- YELLOW Hotspots (Alexander) -->
         <div class="hotspot yellow" id="y1"><span class="tooltip-text">1. Pella</span>1</div>
         <div class="hotspot yellow" id="y2"><span class="tooltip-text">2. Strage</span>2</div>
         <div class="hotspot yellow" id="y3"><span class="tooltip-text">3. Hydaspes</span>3</div>
@@ -382,20 +387,7 @@
         <div class="hotspot yellow" id="y6"><span class="tooltip-text">5b. Makedonien</span>5b</div>
     </div>
 
-    <div class="legend">
-        <div class="legend-item">
-            <div class="legend-dot" style="background:#ed7500;"></div>
-            <span>Herzog Ernst (klickbar)</span>
-        </div>
-        <div class="legend-item">
-            <div class="legend-dot" style="background:#f2c000;"></div>
-            <span>Alexander</span>
-        </div>
-        <div class="legend-item">
-            <div class="legend-ellipse"></div>
-            <span>Brandan</span>
-        </div>
-    </div>
+    <p class="footer">Ebstorfer Weltkarte · Interaktive Darstellung der Reisewege</p>
 
     <p style="margin:10px;font-size:0.8rem;color:#999;display:none;">
         <button onclick="toggleEdit()" style="padding:4px 10px;cursor:pointer;">Edit-Modus (Kreise verschieben)</button>
@@ -403,11 +395,10 @@
 
     <script>
     // ============================================================
-    // Pfeile dynamisch zeichnen basierend auf Hotspot-Positionen
+    // Geschwungene Pfeile zeichnen
     // ============================================================
     function drawArrows() {
         const svg = document.getElementById('svgOverlay');
-        // Alte Pfeile entfernen
         svg.querySelectorAll('.arrow-line').forEach(el => el.remove());
 
         const orangeIds = ['o1','o2','o3','o4','o5','o6','o7','o8','o9'];
@@ -415,25 +406,14 @@
 
         function getPos(id) {
             const el = document.getElementById(id);
-            const top = parseFloat(el.style.top || getComputedStyle(el).top) /
-                        document.getElementById('mapContainer').offsetHeight * 100 ||
-                        parseFloat(el.style.top) ||
-                        parseFloat(getComputedStyle(el).top) / document.getElementById('mapContainer').offsetHeight * 100;
-            // Simpler: just read CSS
             const cs = getComputedStyle(el);
             const container = document.getElementById('mapContainer');
-            const l = parseFloat(el.style.left || cs.left) / container.offsetWidth * 1000;
-            const t = parseFloat(el.style.top || cs.top) / container.offsetHeight * 1000;
-            // Actually use percentage directly
+            let lp, tp;
             const leftPct = el.style.left ? parseFloat(el.style.left) : null;
             const topPct = el.style.top ? parseFloat(el.style.top) : null;
-
-            // Fallback: read from stylesheet
-            let lp, tp;
             if (leftPct !== null && !isNaN(leftPct)) {
                 lp = leftPct;
             } else {
-                // Parse from computed style (px) to percentage
                 lp = parseFloat(cs.left) / container.offsetWidth * 100;
             }
             if (topPct !== null && !isNaN(topPct)) {
@@ -441,7 +421,7 @@
             } else {
                 tp = parseFloat(cs.top) / container.offsetHeight * 100;
             }
-            return { x: lp * 10, y: tp * 10 }; // Scale to 0-1000 SVG viewBox
+            return { x: lp * 10, y: tp * 10 };
         }
 
         function addArrow(ids, markerId, color) {
@@ -455,8 +435,8 @@
                 line.setAttribute("x2", p2.x);
                 line.setAttribute("y2", p2.y);
                 line.setAttribute("stroke", color);
-                line.setAttribute("stroke-width", "2.5");
-                line.setAttribute("stroke-opacity", "0.6");
+                line.setAttribute("stroke-width", "3");
+                line.setAttribute("stroke-opacity", "0.85");
                 line.setAttribute("marker-end", `url(#${markerId})`);
                 svg.appendChild(line);
             }
@@ -466,14 +446,12 @@
         addArrow(yellowIds, 'ah-y', '#f2c000');
     }
 
-    // Initial zeichnen wenn Bild geladen
     document.getElementById('mapImg').addEventListener('load', drawArrows);
-    // Auch direkt versuchen (falls cached)
     if (document.getElementById('mapImg').complete) drawArrows();
     window.addEventListener('resize', drawArrows);
 
     // ============================================================
-    // Edit-Modus: Kreise per Drag & Drop verschieben
+    // Edit-Modus
     // ============================================================
     let editMode = false;
     let dragTarget = null;
@@ -483,17 +461,12 @@
         document.body.classList.toggle('edit-mode', editMode);
         document.getElementById('editBar').classList.toggle('active', editMode);
         if (editMode) {
-            // Ausgegrautepunkte auch verschiebbar machen
             document.querySelectorAll('.hotspot').forEach(el => {
                 el.style.pointerEvents = 'all';
             });
         } else {
-            // Zurücksetzen
             document.querySelectorAll('.hotspot.yellow').forEach(el => {
                 el.style.pointerEvents = '';
-            });
-            document.querySelectorAll('#o6,#o7,#o8').forEach(el => {
-                el.style.pointerEvents = 'none';
             });
         }
     }
@@ -517,7 +490,6 @@
         dragTarget.style.left = x.toFixed(1) + '%';
         dragTarget.style.top = y.toFixed(1) + '%';
         drawArrows();
-        // Live-Koordinaten anzeigen
         document.getElementById('coordOutput').textContent =
             `${dragTarget.id}: top=${y.toFixed(1)}% left=${x.toFixed(1)}%`;
     });
@@ -526,7 +498,6 @@
         dragTarget = null;
     });
 
-    // Klick im Edit-Modus verhindern
     document.querySelectorAll('.hotspot.orange').forEach(el => {
         el.addEventListener('click', function(e) {
             if (editMode) {
@@ -537,7 +508,7 @@
     });
 
     // ============================================================
-    // Ellipse: Drag (Mitte verschieben) + Resize (Ecke ziehen)
+    // Ellipse: Drag + Resize + Rotate
     // ============================================================
     let ellipseDrag = false;
     let ellipseResize = false;
@@ -571,15 +542,15 @@
             el.style.left = xPct.toFixed(1) + '%';
             el.style.top = yPct.toFixed(1) + '%';
         } else if (ellipseResize) {
-            const cx = parseFloat(el.style.left || '15');
-            const cy = parseFloat(el.style.top || '70');
+            const cx = parseFloat(el.style.left || '27');
+            const cy = parseFloat(el.style.top || '88.8');
             const newW = Math.abs(xPct - cx) * 2;
             const newH = Math.abs(yPct - cy) * 2;
             el.style.width = Math.max(5, newW).toFixed(1) + '%';
             el.style.height = Math.max(4, newH).toFixed(1) + '%';
         } else if (ellipseRotate) {
-            const cx = parseFloat(el.style.left || '15') / 100 * rect.width + rect.left;
-            const cy = parseFloat(el.style.top || '70') / 100 * rect.height + rect.top;
+            const cx = parseFloat(el.style.left || '27') / 100 * rect.width + rect.left;
+            const cy = parseFloat(el.style.top || '88.8') / 100 * rect.height + rect.top;
             const angle = Math.atan2(e.clientY - cy, e.clientX - cx) * (180 / Math.PI);
             ellipseRotation = Math.round(angle);
             el.style.transform = `translate(-50%, -50%) rotate(${ellipseRotation}deg)`;
@@ -605,21 +576,16 @@
             const currentNum = this.textContent.trim();
             const newNum = prompt(`Neue Nummer für diesen Punkt (aktuell: ${currentNum}):`, currentNum);
             if (newNum !== null && newNum !== '') {
-                // Nummer im Kreis ändern
-                // Der sichtbare Text ist der letzte TextNode
                 const nodes = this.childNodes;
                 for (let i = nodes.length - 1; i >= 0; i--) {
-                    if (nodes[i].nodeType === 3) { // TextNode
+                    if (nodes[i].nodeType === 3) {
                         nodes[i].textContent = newNum;
                         break;
                     }
                 }
-                // Tooltip-Text aktualisieren
                 const tooltip = this.querySelector('.tooltip-text');
                 if (tooltip) {
-                    const oldText = tooltip.textContent;
-                    // Ersetze nur die Nummer am Anfang
-                    tooltip.textContent = oldText.replace(/^\d+/, newNum);
+                    tooltip.textContent = tooltip.textContent.replace(/^[\d\w]+/, newNum);
                 }
                 document.getElementById('coordOutput').textContent =
                     `${this.id}: Nummer geändert zu ${newNum}`;
@@ -642,7 +608,6 @@
                 left = (parseFloat(cs.left) / container.offsetWidth * 100).toFixed(1) + '%';
                 top = (parseFloat(cs.top) / container.offsetHeight * 100).toFixed(1) + '%';
             }
-            // Aktuelle Nummer auslesen
             let num = '';
             const nodes = el.childNodes;
             for (let i = nodes.length - 1; i >= 0; i--) {
@@ -655,7 +620,6 @@
             const label = tooltip ? tooltip.textContent : '';
             output += `${id} | Nr: ${num} | top: ${top} | left: ${left} | ${label}\n`;
         });
-        // Ellipse-Daten
         const ell = document.getElementById('brandanEllipse');
         const ellCs = getComputedStyle(ell);
         const container2 = document.getElementById('mapContainer');
