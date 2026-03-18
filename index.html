@@ -48,12 +48,46 @@
         /* Avatare-Legende rechts unten auf der Karte */
         .avatare-legend {
             position: absolute;
-            bottom: 2%;
+            bottom: 3%;
             right: 2%;
-            width: 30%;
-            max-width: 250px;
+            display: flex;
+            gap: 0;
+            background: rgba(244, 228, 188, 0.92);
+            border-radius: 8px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.35);
+            border: 2px solid rgba(0,0,0,0.15);
+            padding: 6px 4px;
+            z-index: 5;
+        }
+        .avatar-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 4px 8px;
+        }
+        .avatar-card .avatar-img {
+            width: 50px;
+            height: 65px;
             border-radius: 4px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+            background-image: url('Avatare.jpg');
+            background-size: 300% 100%;
+            background-color: #fff;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+        }
+        .avatar-card .avatar-name {
+            margin-top: 4px;
+            font-size: 0.65rem;
+            font-weight: bold;
+            font-family: Georgia, serif;
+            letter-spacing: 0.02em;
+        }
+        .avatar-card .avatar-color {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-top: 2px;
+            border: 1.5px solid #fff;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.3);
         }
 
         .hotspot {
@@ -87,11 +121,21 @@
         .hotspot.orange:hover {
             background-color: rgba(237, 117, 0, 1);
         }
+        .hotspot.orange.clickable {
+            animation: pulse 1.8s ease-in-out infinite;
+            border: 2.5px solid #fff;
+            box-shadow: 0 0 12px 4px rgba(237, 117, 0, 0.7);
+            cursor: pointer;
+        }
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 0 10px 4px rgba(237, 117, 0, 0.6); }
+            50% { box-shadow: 0 0 22px 10px rgba(237, 117, 0, 0.95); }
+        }
 
         .hotspot.yellow {
             background-color: rgba(242, 192, 0, 0.9);
             color: #333;
-            pointer-events: none;
+            cursor: default;
         }
 
         .hotspot .tooltip-text {
@@ -142,48 +186,24 @@
         /* Brandan Ellipse */
         .brandan-ellipse {
             position: absolute;
-            top: 70%;
-            left: 15%;
-            width: 20%;
-            height: 16%;
-            transform: translate(-50%, -50%);
-            border: 2.5px dashed #4080d8;
+            top: 88.8%;
+            left: 27%;
+            width: 14.2%;
+            height: 4%;
+            transform: translate(-50%, -50%) rotate(34deg);
+            border: 3px dashed #2a60b0;
             border-radius: 50%;
-            background: rgba(64, 128, 216, 0.12);
+            background: rgba(42, 96, 176, 0.25);
             pointer-events: none;
             z-index: 1;
-            display: flex;
-            align-items: flex-end;
-            justify-content: center;
-        }
-        .brandan-label {
-            position: absolute;
-            bottom: -20px;
-            color: #4080d8;
-            font-size: 0.85rem;
-            font-weight: bold;
-            font-family: Georgia, serif;
         }
         body.edit-mode .brandan-ellipse {
             pointer-events: all;
             cursor: move;
             border-color: #6af;
         }
-        /* Resize-Handle für Ellipse im Edit-Modus */
-        .ellipse-resize {
-            display: none;
-            position: absolute;
-            bottom: -6px;
-            right: -6px;
-            width: 12px;
-            height: 12px;
-            background: #4080d8;
-            border: 2px solid #fff;
-            border-radius: 50%;
+        body.edit-mode .brandan-ellipse.resizing {
             cursor: nwse-resize;
-        }
-        body.edit-mode .ellipse-resize {
-            display: block;
         }
 
         /* Edit-Modus */
@@ -228,23 +248,23 @@
         /* === POSITIONEN der Punkte (% vom Bild) === */
 
         /* ORANGE - Herzog Ernst Route */
-        #o1 { top: 73%; left: 34%; }
-        #o2 { top: 55%; left: 10%; }
-        #o3 { top: 37%; left: 16%; }
-        #o4 { top: 24%; left: 22%; }
-        #o5 { top:  6%; left: 43%; }
-        #o6 { top: 47%; left: 52%; }
-        #o7 { top: 76%; left: 56%; }
-        #o8 { top: 84%; left: 35%; }
+        #o1 { top: 70.9%; left: 28.9%; }
+        #o2 { top: 49.1%; left: 6.3%; }
+        #o3 { top: 26.4%; left: 17.9%; }
+        #o4 { top: 4.4%; left: 41.3%; }
+        #o5 { top: 37.8%; left: 59.9%; }
+        #o6 { top: 50.8%; left: 49.9%; }
+        #o7 { top: 66.7%; left: 59%; }
+        #o8 { top: 75.0%; left: 58.0%; }
+        #o9 { top: 73.2%; left: 30.1%; }
 
         /* YELLOW - Alexander Route */
-        #y1 { top: 64%; left: 53%; }
-        #y2 { top: 57%; left: 45%; }
-        #y3 { top: 31%; left: 56%; }
-        #y4 { top: 33%; left: 38%; }
-        #y5 { top: 33%; left: 36%; }
-        #y6 { top: 16%; left: 42%; }
-        #y7 { top: 12%; left: 36%; }
+        #y1 { top: 59.6%; left: 49.5%; }
+        #y2 { top: 31.6%; left: 53.2%; }
+        #y3 { top: 25.6%; left: 54.3%; }
+        #y4 { top: 29.1%; left: 40.9%; }
+        #y5 { top: 12.2%; left: 44.6%; }
+        #y6 { top: 60.5%; left: 44.1%; }
     </style>
 </head>
 <body>
@@ -263,7 +283,23 @@
         <img src="ebstorf_map.jpg" alt="Ebstorfer Weltkarte" class="map-image" id="mapImg">
 
         <!-- Avatare-Legende rechts unten auf der Karte -->
-        <img src="Avatare.jpg" alt="Avatare: Herzog Ernst, Alexander, Brandan" class="avatare-legend">
+        <div class="avatare-legend">
+            <div class="avatar-card">
+                <div class="avatar-img" style="background-position: 0% center;"></div>
+                <span class="avatar-name" style="color:#c45500;">Herzog Ernst</span>
+                <div class="avatar-color" style="background:#ed7500;"></div>
+            </div>
+            <div class="avatar-card">
+                <div class="avatar-img" style="background-position: 50% center;"></div>
+                <span class="avatar-name" style="color:#b8940a;">Alexander</span>
+                <div class="avatar-color" style="background:#f2c000;"></div>
+            </div>
+            <div class="avatar-card">
+                <div class="avatar-img" style="background-position: 100% center;"></div>
+                <span class="avatar-name" style="color:#3568a8;">Brandan</span>
+                <div class="avatar-color" style="background:#4080d8;"></div>
+            </div>
+        </div>
 
         <!-- SVG Overlay: Pfeile + Ellipse -->
         <svg class="overlay-svg" id="svgOverlay" viewBox="0 0 1000 1000" preserveAspectRatio="none">
@@ -280,28 +316,26 @@
 
         <!-- BLAUE Ellipse (Brandan) -->
         <div class="brandan-ellipse" id="brandanEllipse">
-            <span class="brandan-label">Brandan</span>
-            <div class="ellipse-resize" id="ellipseResize"></div>
         </div>
 
         <!-- ORANGE Hotspots (Herzog Ernst) - klickbar -->
-        <a href="1_pdf Station 1.pdf" class="hotspot orange" id="o1" target="_blank"><span class="tooltip-text">1. Bamberg / Regensburg</span>1</a>
-        <a href="2_Station 2 Aufgaben AFB I.pdf" class="hotspot orange" id="o2" target="_blank"><span class="tooltip-text">2. Grippia</span>2</a>
-        <a href="3_Station 3.pdf" class="hotspot orange" id="o3" target="_blank"><span class="tooltip-text">3. Arimaspi</span>3</a>
-        <a href="4_Station 4.pdf" class="hotspot orange" id="o4" target="_blank"><span class="tooltip-text">4. Greifen / Ören</span>4</a>
-        <a href="5_Mögliche Aufgabentypen Rückkehr.pdf" class="hotspot orange" id="o5" target="_blank"><span class="tooltip-text">5. Lebermeer / Magnetberg</span>5</a>
-        <div class="hotspot orange" id="o6" style="opacity:0.5;pointer-events:none;"><span class="tooltip-text">6. Jerusalem</span>6</div>
-        <div class="hotspot orange" id="o7" style="opacity:0.5;pointer-events:none;"><span class="tooltip-text">7. Rom</span>7</div>
-        <div class="hotspot orange" id="o8" style="opacity:0.5;pointer-events:none;"><span class="tooltip-text">8. Mainz</span>8</div>
+        <a href="1_pdf Station 1.pdf" class="hotspot orange clickable" id="o1" target="_blank"><span class="tooltip-text">1. Reich und Baiern</span>1</a>
+        <a href="2_Station 2 Aufgaben AFB I.pdf" class="hotspot orange clickable" id="o2" target="_blank"><span class="tooltip-text">2. Grippia</span>2</a>
+        <a href="3_Station 3.pdf" class="hotspot orange clickable" id="o3" target="_blank"><span class="tooltip-text">3. Arimaspi</span>3</a>
+        <a href="4_Station 4.pdf" class="hotspot orange clickable" id="o4" target="_blank"><span class="tooltip-text">4. Lebermeer / Magnetberg</span>4</a>
+        <a href="5_Mögliche Aufgabentypen Rückkehr.pdf" class="hotspot orange clickable" id="o5" target="_blank"><span class="tooltip-text">5a. Babylon</span>5a</a>
+        <div class="hotspot orange" id="o6"><span class="tooltip-text">5b. Jerusalem</span>5b</div>
+        <div class="hotspot orange" id="o7"><span class="tooltip-text">5c. Bari</span>5c</div>
+        <div class="hotspot orange" id="o8"><span class="tooltip-text">5d. Rom</span>5d</div>
+        <div class="hotspot orange" id="o9"><span class="tooltip-text">5e. Bamberg</span>5e</div>
 
         <!-- YELLOW Hotspots (Alexander) - nicht klickbar -->
-        <div class="hotspot yellow" id="y1"><span class="tooltip-text">1. Bari / Konstantinopel</span>1</div>
-        <div class="hotspot yellow" id="y2"><span class="tooltip-text">2. Akkon</span>2</div>
-        <div class="hotspot yellow" id="y3"><span class="tooltip-text">3. Babylon</span>3</div>
-        <div class="hotspot yellow" id="y4"><span class="tooltip-text">4. Östliche Lande</span>4</div>
-        <div class="hotspot yellow" id="y5"><span class="tooltip-text">5. Östliche Lande</span>5</div>
-        <div class="hotspot yellow" id="y6"><span class="tooltip-text">6. Talkkessel</span>6</div>
-        <div class="hotspot yellow" id="y7"><span class="tooltip-text">7. Ferner Osten</span>7</div>
+        <div class="hotspot yellow" id="y1"><span class="tooltip-text">1. Pella</span>1</div>
+        <div class="hotspot yellow" id="y2"><span class="tooltip-text">2. Strage</span>2</div>
+        <div class="hotspot yellow" id="y3"><span class="tooltip-text">3. Hydaspes</span>3</div>
+        <div class="hotspot yellow" id="y4"><span class="tooltip-text">4. Wald im Umland der Kaspischen Tore</span>4</div>
+        <div class="hotspot yellow" id="y5"><span class="tooltip-text">5a. Irdisches Paradies</span>5a</div>
+        <div class="hotspot yellow" id="y6"><span class="tooltip-text">5b. Makedonien</span>5b</div>
     </div>
 
     <div class="legend">
@@ -332,8 +366,8 @@
         // Alte Pfeile entfernen
         svg.querySelectorAll('.arrow-line').forEach(el => el.remove());
 
-        const orangeIds = ['o1','o2','o3','o4','o5','o6','o7','o8'];
-        const yellowIds = ['y1','y2','y3','y4','y5','y6','y7'];
+        const orangeIds = ['o1','o2','o3','o4','o5','o6','o7','o8','o9'];
+        const yellowIds = ['y1','y2','y3','y4','y5','y6'];
 
         function getPos(id) {
             const el = document.getElementById(id);
@@ -463,11 +497,16 @@
     // ============================================================
     let ellipseDrag = false;
     let ellipseResize = false;
+    let ellipseRotate = false;
+    let ellipseRotation = 34;
 
     document.getElementById('brandanEllipse').addEventListener('mousedown', function(e) {
         if (!editMode) return;
-        if (e.target.id === 'ellipseResize') {
+        if (e.altKey) {
+            ellipseRotate = true;
+        } else if (e.shiftKey) {
             ellipseResize = true;
+            this.classList.add('resizing');
         } else {
             ellipseDrag = true;
         }
@@ -476,7 +515,7 @@
     });
 
     document.addEventListener('mousemove', function(e) {
-        if (!ellipseDrag && !ellipseResize) return;
+        if (!ellipseDrag && !ellipseResize && !ellipseRotate) return;
         e.preventDefault();
         const container = document.getElementById('mapContainer');
         const rect = container.getBoundingClientRect();
@@ -488,21 +527,29 @@
             el.style.left = xPct.toFixed(1) + '%';
             el.style.top = yPct.toFixed(1) + '%';
         } else if (ellipseResize) {
-            // Breite/Höhe = Abstand vom Zentrum * 2
             const cx = parseFloat(el.style.left || '15');
             const cy = parseFloat(el.style.top || '70');
             const newW = Math.abs(xPct - cx) * 2;
             const newH = Math.abs(yPct - cy) * 2;
             el.style.width = Math.max(5, newW).toFixed(1) + '%';
             el.style.height = Math.max(4, newH).toFixed(1) + '%';
+        } else if (ellipseRotate) {
+            const cx = parseFloat(el.style.left || '15') / 100 * rect.width + rect.left;
+            const cy = parseFloat(el.style.top || '70') / 100 * rect.height + rect.top;
+            const angle = Math.atan2(e.clientY - cy, e.clientX - cx) * (180 / Math.PI);
+            ellipseRotation = Math.round(angle);
+            el.style.transform = `translate(-50%, -50%) rotate(${ellipseRotation}deg)`;
         }
+        const rot = ellipseRotation || 0;
         document.getElementById('coordOutput').textContent =
-            `Ellipse: top=${el.style.top} left=${el.style.left} width=${el.style.width} height=${el.style.height}`;
+            `Ellipse: top=${el.style.top} left=${el.style.left} w=${el.style.width} h=${el.style.height} rotate=${rot}°`;
     });
 
     document.addEventListener('mouseup', function() {
         ellipseDrag = false;
         ellipseResize = false;
+        ellipseRotate = false;
+        document.getElementById('brandanEllipse').classList.remove('resizing');
     });
 
     // Doppelklick = Nummer ändern
@@ -537,7 +584,7 @@
     });
 
     function copyPositions() {
-        const allIds = ['o1','o2','o3','o4','o5','o6','o7','o8','y1','y2','y3','y4','y5','y6','y7'];
+        const allIds = ['o1','o2','o3','o4','o5','o6','o7','o8','o9','y1','y2','y3','y4','y5','y6'];
         let output = '=== POSITIONEN & NUMMERN ===\n';
         allIds.forEach(id => {
             const el = document.getElementById(id);
@@ -573,7 +620,8 @@
         const eWidth = ell.style.width || (parseFloat(ellCs.width) / container2.offsetWidth * 100).toFixed(1) + '%';
         const eHeight = ell.style.height || (parseFloat(ellCs.height) / container2.offsetHeight * 100).toFixed(1) + '%';
         output += `\n=== ELLIPSE (Brandan) ===\n`;
-        output += `top: ${eTop} | left: ${eLeft} | width: ${eWidth} | height: ${eHeight}\n`;
+        const eRotate = ellipseRotation || 0;
+        output += `top: ${eTop} | left: ${eLeft} | width: ${eWidth} | height: ${eHeight} | rotate: ${eRotate}deg\n`;
 
         navigator.clipboard.writeText(output).then(() => {
             document.getElementById('coordOutput').textContent = 'Positionen + Nummern in Zwischenablage kopiert!';
