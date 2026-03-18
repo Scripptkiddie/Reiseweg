@@ -265,6 +265,50 @@
         #y4 { top: 29.1%; left: 40.9%; }
         #y5 { top: 12.2%; left: 44.6%; }
         #y6 { top: 60.5%; left: 44.1%; }
+        /* === RESPONSIVE: Smartphone === */
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 1rem;
+                padding: 12px 10px 2px;
+            }
+            .subtitle {
+                font-size: 0.75rem;
+                margin-bottom: 8px;
+            }
+            .hotspot {
+                width: 4.5%;
+                height: 4.5%;
+                font-size: 0.45rem;
+                border-width: 1.5px;
+            }
+            .avatare-legend {
+                padding: 4px 2px;
+                border-radius: 6px;
+                bottom: 1%;
+                right: 1%;
+            }
+            .avatar-card {
+                padding: 2px 4px;
+            }
+            .avatar-card .avatar-img {
+                width: 30px;
+                height: 40px;
+            }
+            .avatar-card .avatar-name {
+                font-size: 0.45rem;
+            }
+            .avatar-card .avatar-color {
+                width: 7px;
+                height: 7px;
+            }
+            .legend {
+                gap: 12px;
+                padding: 10px;
+            }
+            .legend-item {
+                font-size: 0.75rem;
+            }
+        }
     </style>
 </head>
 <body>
@@ -353,7 +397,7 @@
         </div>
     </div>
 
-    <p style="margin:10px;font-size:0.8rem;color:#999;">
+    <p style="margin:10px;font-size:0.8rem;color:#999;display:none;">
         <button onclick="toggleEdit()" style="padding:4px 10px;cursor:pointer;">Edit-Modus (Kreise verschieben)</button>
     </p>
 
