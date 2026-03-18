@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reisewege auf der Ebstorfer Weltkarte</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #f4e4bc;
+            font-family: 'Georgia', serif;
+            text-align: center;
+        }
+
+        h1 {
+            padding: 20px 20px 5px;
+            font-size: 1.4rem;
+            color: #333;
+        }
+
+        .subtitle {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 15px;
+        }
+
+        .map-container {
+            position: relative;
+            width: 100%;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .map-image {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        /* SVG overlay for arrows, ellipse, and circles */
+        .overlay-svg {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none;
+        }
+
+        /* Hotspot base style */
+        .hotspot {
+            position: absolute;
+            width: 3%;
+            height: 3%;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 2px solid white;
+            transition: transform 0.2s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-decoration: none;
+            font-size: 0.7rem;
+            font-weight: bold;
+            color: white;
+            transform: translate(-50%, -50%);
+            box-shadow: 0 1px 4px rgba(0,0,0,0.4);
+        }
+
+        .hotspot:hover {
+            transform: translate(-50%, -50%) scale(1.3);
+            z-index: 10;
+        }
+
+        /* Orange = Herzog Ernst (klickbar) */
+        .hotspot.orange {
+            background-color: rgba(237, 117, 0, 0.9);
+        }
+        .hotspot.orange:hover {
+            background-color: rgba(237, 117, 0, 1);
+        }
+
+        /* Yellow = Alexander */
+        .hotspot.yellow {
+            background-color: rgba(242, 192, 0, 0.9);
+            color: #333;
+            pointer-events: none;
+        }
+
+        /* Tooltip */
+        .hotspot .tooltip-text {
+            display: none;
+            position: absolute;
+            bottom: 120%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0,0,0,0.85);
+            color: #fff;
+            padding: 4px 10px;
+            border-radius: 5px;
+            font-size: 0.75rem;
+            white-space: nowrap;
+            pointer-events: none;
+        }
+        .hotspot:hover .tooltip-text {
+            display: block;
+        }
+
+        /* Legend */
+        .legend {
+            display: flex;
+            gap: 25px;
+            justify-content: center;
+            padding: 15px;
+            flex-wrap: wrap;
+        }
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.9rem;
+            color: #333;
+        }
+        .legend-dot {
+            width: 14px; height: 14px;
+            border-radius: 50%;
+            border: 2px solid #fff;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+        }
+        .legend-ellipse {
+            width: 24px; height: 14px;
+            border-radius: 50%;
+            border: 2px solid #4080d8;
+            background: rgba(64,128,216,0.2);
+        }
+
+        /* === POSITIONEN der Punkte (% vom Bild) === */
+
+        /* ORANGE - Herzog Ernst Route */
+        #o1 { top: 73%; left: 34%; }
+        #o2 { top: 55%; left: 10%; }
+        #o3 { top: 37%; left: 16%; }
+        #o4 { top: 24%; left: 22%; }
+        #o5 { top:  6%; left: 43%; }
+        #o6 { top: 47%; left: 52%; }
+        #o7 { top: 76%; left: 56%; }
+        #o8 { top: 84%; left: 35%; }
+
+        /* YELLOW - Alexander Route */
+        #y1 { top: 64%; left: 53%; }
+        #y2 { top: 57%; left: 45%; }
+        #y3 { top: 31%; left: 56%; }
+        #y4 { top: 33%; left: 38%; }
+        #y5 { top: 33%; left: 36%; }
+        #y6 { top: 16%; left: 42%; }
+        #y7 { top: 12%; left: 36%; }
+    </style>
+</head>
+<body>
+
+    <h1>Reisewege auf der Ebstorfer Weltkarte</h1>
+    <p class="subtitle">Klicke auf die orangenen Punkte (Herzog Ernst) für Details</p>
+
+    <div class="map-container">
+        <img src="ebstorf_map.jpg" alt="Ebstorfer Weltkarte" class="map-image">
+
+        <!-- SVG Overlay: Pfeile + Ellipse -->
+        <svg class="overlay-svg" viewBox="0 0 1000 1000" preserveAspectRatio="none">
+            <defs>
+                <marker id="ah-o" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+                    <path d="M0,0 L8,3 L0,6 Z" fill="#ed7500" fill-opacity="0.7"/>
+                </marker>
+                <marker id="ah-y" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+                    <path d="M0,0 L8,3 L0,6 Z" fill="#f2c000" fill-opacity="0.7"/>
+                </marker>
+            </defs>
+
+            <!-- Orange Pfeile (Herzog Ernst) -->
+            <polyline points="340,730 100,550" fill="none" stroke="#ed7500" stroke-width="2.5" stroke-opacity="0.6" marker-end="url(#ah-o)"/>
+            <polyline points="100,550 160,370" fill="none" stroke="#ed7500" stroke-width="2.5" stroke-opacity="0.6" marker-end="url(#ah-o)"/>
+            <polyline points="160,370 220,240" fill="none" stroke="#ed7500" stroke-width="2.5" stroke-opacity="0.6" marker-end="url(#ah-o)"/>
+            <polyline points="220,240 430,60" fill="none" stroke="#ed7500" stroke-width="2.5" stroke-opacity="0.6" marker-end="url(#ah-o)"/>
+            <polyline points="430,60 520,470" fill="none" stroke="#ed7500" stroke-width="2.5" stroke-opacity="0.6" marker-end="url(#ah-o)"/>
+            <polyline points="520,470 560,760" fill="none" stroke="#ed7500" stroke-width="2.5" stroke-opacity="0.6" marker-end="url(#ah-o)"/>
+            <polyline points="560,760 350,840" fill="none" stroke="#ed7500" stroke-width="2.5" stroke-opacity="0.6" marker-end="url(#ah-o)"/>
+
+            <!-- Gelbe Pfeile (Alexander) -->
+            <polyline points="530,640 450,570" fill="none" stroke="#f2c000" stroke-width="2.5" stroke-opacity="0.6" marker-end="url(#ah-y)"/>
+            <polyline points="450,570 560,310" fill="none" stroke="#f2c000" stroke-width="2.5" stroke-opacity="0.6" marker-end="url(#ah-y)"/>
+            <polyline points="560,310 380,330" fill="none" stroke="#f2c000" stroke-width="2.5" stroke-opacity="0.6" marker-end="url(#ah-y)"/>
+            <polyline points="380,330 360,330" fill="none" stroke="#f2c000" stroke-width="2.5" stroke-opacity="0.6" marker-end="url(#ah-y)"/>
+            <polyline points="360,330 420,160" fill="none" stroke="#f2c000" stroke-width="2.5" stroke-opacity="0.6" marker-end="url(#ah-y)"/>
+            <polyline points="420,160 360,120" fill="none" stroke="#f2c000" stroke-width="2.5" stroke-opacity="0.6" marker-end="url(#ah-y)"/>
+
+            <!-- Blaue Ellipse (Brandan) -->
+            <ellipse cx="180" cy="780" rx="100" ry="80"
+                     fill="rgba(64,128,216,0.12)" stroke="#4080d8"
+                     stroke-width="2.5" stroke-dasharray="10,5"/>
+            <text x="180" y="875" text-anchor="middle" fill="#4080d8"
+                  font-size="16" font-weight="bold" font-family="Georgia, serif">Brandan</text>
+        </svg>
+
+        <!-- ORANGE Hotspots (Herzog Ernst) - klickbar -->
+        <a href="1_pdf Station 1.pdf" class="hotspot orange" id="o1" target="_blank"><span class="tooltip-text">1. Bamberg / Regensburg</span>1</a>
+        <a href="2_Station 2 Aufgaben AFB I.pdf" class="hotspot orange" id="o2" target="_blank"><span class="tooltip-text">2. Grippia</span>2</a>
+        <a href="3_Station 3.pdf" class="hotspot orange" id="o3" target="_blank"><span class="tooltip-text">3. Arimaspi</span>3</a>
+        <a href="4_Station 4.pdf" class="hotspot orange" id="o4" target="_blank"><span class="tooltip-text">4. Greifen / Ören</span>4</a>
+        <a href="5_Mögliche Aufgabentypen Rückkehr.pdf" class="hotspot orange" id="o5" target="_blank"><span class="tooltip-text">5. Lebermeer / Magnetberg</span>5</a>
+        <div class="hotspot orange" id="o6" style="opacity:0.5;pointer-events:none;"><span class="tooltip-text">6. Jerusalem</span>6</div>
+        <div class="hotspot orange" id="o7" style="opacity:0.5;pointer-events:none;"><span class="tooltip-text">7. Rom</span>7</div>
+        <div class="hotspot orange" id="o8" style="opacity:0.5;pointer-events:none;"><span class="tooltip-text">8. Mainz</span>8</div>
+
+        <!-- YELLOW Hotspots (Alexander) - nicht klickbar -->
+        <div class="hotspot yellow" id="y1"><span class="tooltip-text">1. Bari / Konstantinopel</span>1</div>
+        <div class="hotspot yellow" id="y2"><span class="tooltip-text">2. Akkon</span>2</div>
+        <div class="hotspot yellow" id="y3"><span class="tooltip-text">3. Babylon</span>3</div>
+        <div class="hotspot yellow" id="y4"><span class="tooltip-text">4. Östliche Lande</span>4</div>
+        <div class="hotspot yellow" id="y5"><span class="tooltip-text">5. Östliche Lande</span>5</div>
+        <div class="hotspot yellow" id="y6"><span class="tooltip-text">6. Talkkessel</span>6</div>
+        <div class="hotspot yellow" id="y7"><span class="tooltip-text">7. Ferner Osten</span>7</div>
+    </div>
+
+    <div class="legend">
+        <div class="legend-item">
+            <div class="legend-dot" style="background:#ed7500;"></div>
+            <span>Herzog Ernst (klickbar)</span>
+        </div>
+        <div class="legend-item">
+            <div class="legend-dot" style="background:#f2c000;"></div>
+            <span>Alexander</span>
+        </div>
+        <div class="legend-item">
+            <div class="legend-ellipse"></div>
+            <span>Brandan</span>
+        </div>
+    </div>
+
+</body>
+</html>
