@@ -38,7 +38,6 @@
             display: block;
         }
 
-        /* SVG overlay for arrows, ellipse, and circles */
         .overlay-svg {
             position: absolute;
             top: 0; left: 0;
@@ -46,7 +45,17 @@
             pointer-events: none;
         }
 
-        /* Hotspot base style */
+        /* Avatare-Legende rechts unten auf der Karte */
+        .avatare-legend {
+            position: absolute;
+            bottom: 2%;
+            right: 2%;
+            width: 30%;
+            max-width: 250px;
+            border-radius: 4px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+        }
+
         .hotspot {
             position: absolute;
             width: 3%;
@@ -64,6 +73,7 @@
             color: white;
             transform: translate(-50%, -50%);
             box-shadow: 0 1px 4px rgba(0,0,0,0.4);
+            z-index: 2;
         }
 
         .hotspot:hover {
@@ -71,7 +81,6 @@
             z-index: 10;
         }
 
-        /* Orange = Herzog Ernst (klickbar) */
         .hotspot.orange {
             background-color: rgba(237, 117, 0, 0.9);
         }
@@ -79,14 +88,12 @@
             background-color: rgba(237, 117, 0, 1);
         }
 
-        /* Yellow = Alexander */
         .hotspot.yellow {
             background-color: rgba(242, 192, 0, 0.9);
             color: #333;
             pointer-events: none;
         }
 
-        /* Tooltip */
         .hotspot .tooltip-text {
             display: none;
             position: absolute;
@@ -105,7 +112,6 @@
             display: block;
         }
 
-        /* Legend */
         .legend {
             display: flex;
             gap: 25px;
@@ -133,6 +139,92 @@
             background: rgba(64,128,216,0.2);
         }
 
+        /* Brandan Ellipse */
+        .brandan-ellipse {
+            position: absolute;
+            top: 70%;
+            left: 15%;
+            width: 20%;
+            height: 16%;
+            transform: translate(-50%, -50%);
+            border: 2.5px dashed #4080d8;
+            border-radius: 50%;
+            background: rgba(64, 128, 216, 0.12);
+            pointer-events: none;
+            z-index: 1;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+        }
+        .brandan-label {
+            position: absolute;
+            bottom: -20px;
+            color: #4080d8;
+            font-size: 0.85rem;
+            font-weight: bold;
+            font-family: Georgia, serif;
+        }
+        body.edit-mode .brandan-ellipse {
+            pointer-events: all;
+            cursor: move;
+            border-color: #6af;
+        }
+        /* Resize-Handle für Ellipse im Edit-Modus */
+        .ellipse-resize {
+            display: none;
+            position: absolute;
+            bottom: -6px;
+            right: -6px;
+            width: 12px;
+            height: 12px;
+            background: #4080d8;
+            border: 2px solid #fff;
+            border-radius: 50%;
+            cursor: nwse-resize;
+        }
+        body.edit-mode .ellipse-resize {
+            display: block;
+        }
+
+        /* Edit-Modus */
+        .edit-bar {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            background: #222;
+            color: #0f0;
+            padding: 8px 16px;
+            font-family: monospace;
+            font-size: 0.85rem;
+            z-index: 100;
+            text-align: left;
+        }
+        .edit-bar.active { display: flex; gap: 16px; align-items: center; flex-wrap: wrap; }
+        .edit-bar button {
+            background: #444;
+            color: #fff;
+            border: 1px solid #666;
+            padding: 4px 12px;
+            cursor: pointer;
+            border-radius: 3px;
+        }
+        .edit-bar button:hover { background: #666; }
+        #coordOutput {
+            flex: 1;
+            min-width: 200px;
+            overflow-x: auto;
+        }
+
+        body.edit-mode .hotspot {
+            cursor: grab;
+        }
+        body.edit-mode .hotspot:active {
+            cursor: grabbing;
+        }
+        body.edit-mode .hotspot.yellow {
+            pointer-events: all;
+        }
+
         /* === POSITIONEN der Punkte (% vom Bild) === */
 
         /* ORANGE - Herzog Ernst Route */
@@ -157,14 +249,24 @@
 </head>
 <body>
 
+    <div class="edit-bar" id="editBar">
+        <span>EDIT-MODUS: Verschieben = Ziehen | Nummer ändern = Doppelklick</span>
+        <button onclick="copyPositions()">Alles kopieren</button>
+        <button onclick="toggleEdit()">Edit beenden</button>
+        <div id="coordOutput"></div>
+    </div>
+
     <h1>Reisewege auf der Ebstorfer Weltkarte</h1>
     <p class="subtitle">Klicke auf die orangenen Punkte (Herzog Ernst) für Details</p>
 
-    <div class="map-container">
-        <img src="ebstorf_map.jpg" alt="Ebstorfer Weltkarte" class="map-image">
+    <div class="map-container" id="mapContainer">
+        <img src="ebstorf_map.jpg" alt="Ebstorfer Weltkarte" class="map-image" id="mapImg">
+
+        <!-- Avatare-Legende rechts unten auf der Karte -->
+        <img src="Avatare.jpg" alt="Avatare: Herzog Ernst, Alexander, Brandan" class="avatare-legend">
 
         <!-- SVG Overlay: Pfeile + Ellipse -->
-        <svg class="overlay-svg" viewBox="0 0 1000 1000" preserveAspectRatio="none">
+        <svg class="overlay-svg" id="svgOverlay" viewBox="0 0 1000 1000" preserveAspectRatio="none">
             <defs>
                 <marker id="ah-o" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
                     <path d="M0,0 L8,3 L0,6 Z" fill="#ed7500" fill-opacity="0.7"/>
@@ -173,31 +275,14 @@
                     <path d="M0,0 L8,3 L0,6 Z" fill="#f2c000" fill-opacity="0.7"/>
                 </marker>
             </defs>
-
-            <!-- Orange Pfeile (Herzog Ernst) -->
-            <polyline points="340,730 100,550" fill="none" stroke="#ed7500" stroke-width="2.5" stroke-opacity="0.6" marker-end="url(#ah-o)"/>
-            <polyline points="100,550 160,370" fill="none" stroke="#ed7500" stroke-width="2.5" stroke-opacity="0.6" marker-end="url(#ah-o)"/>
-            <polyline points="160,370 220,240" fill="none" stroke="#ed7500" stroke-width="2.5" stroke-opacity="0.6" marker-end="url(#ah-o)"/>
-            <polyline points="220,240 430,60" fill="none" stroke="#ed7500" stroke-width="2.5" stroke-opacity="0.6" marker-end="url(#ah-o)"/>
-            <polyline points="430,60 520,470" fill="none" stroke="#ed7500" stroke-width="2.5" stroke-opacity="0.6" marker-end="url(#ah-o)"/>
-            <polyline points="520,470 560,760" fill="none" stroke="#ed7500" stroke-width="2.5" stroke-opacity="0.6" marker-end="url(#ah-o)"/>
-            <polyline points="560,760 350,840" fill="none" stroke="#ed7500" stroke-width="2.5" stroke-opacity="0.6" marker-end="url(#ah-o)"/>
-
-            <!-- Gelbe Pfeile (Alexander) -->
-            <polyline points="530,640 450,570" fill="none" stroke="#f2c000" stroke-width="2.5" stroke-opacity="0.6" marker-end="url(#ah-y)"/>
-            <polyline points="450,570 560,310" fill="none" stroke="#f2c000" stroke-width="2.5" stroke-opacity="0.6" marker-end="url(#ah-y)"/>
-            <polyline points="560,310 380,330" fill="none" stroke="#f2c000" stroke-width="2.5" stroke-opacity="0.6" marker-end="url(#ah-y)"/>
-            <polyline points="380,330 360,330" fill="none" stroke="#f2c000" stroke-width="2.5" stroke-opacity="0.6" marker-end="url(#ah-y)"/>
-            <polyline points="360,330 420,160" fill="none" stroke="#f2c000" stroke-width="2.5" stroke-opacity="0.6" marker-end="url(#ah-y)"/>
-            <polyline points="420,160 360,120" fill="none" stroke="#f2c000" stroke-width="2.5" stroke-opacity="0.6" marker-end="url(#ah-y)"/>
-
-            <!-- Blaue Ellipse (Brandan) -->
-            <ellipse cx="180" cy="780" rx="100" ry="80"
-                     fill="rgba(64,128,216,0.12)" stroke="#4080d8"
-                     stroke-width="2.5" stroke-dasharray="10,5"/>
-            <text x="180" y="875" text-anchor="middle" fill="#4080d8"
-                  font-size="16" font-weight="bold" font-family="Georgia, serif">Brandan</text>
+            <!-- Pfeile werden per JS generiert -->
         </svg>
+
+        <!-- BLAUE Ellipse (Brandan) -->
+        <div class="brandan-ellipse" id="brandanEllipse">
+            <span class="brandan-label">Brandan</span>
+            <div class="ellipse-resize" id="ellipseResize"></div>
+        </div>
 
         <!-- ORANGE Hotspots (Herzog Ernst) - klickbar -->
         <a href="1_pdf Station 1.pdf" class="hotspot orange" id="o1" target="_blank"><span class="tooltip-text">1. Bamberg / Regensburg</span>1</a>
@@ -233,6 +318,213 @@
             <span>Brandan</span>
         </div>
     </div>
+
+    <p style="margin:10px;font-size:0.8rem;color:#999;">
+        <button onclick="toggleEdit()" style="padding:4px 10px;cursor:pointer;">Edit-Modus (Kreise verschieben)</button>
+    </p>
+
+    <script>
+    // ============================================================
+    // Pfeile dynamisch zeichnen basierend auf Hotspot-Positionen
+    // ============================================================
+    function drawArrows() {
+        const svg = document.getElementById('svgOverlay');
+        // Alte Pfeile entfernen
+        svg.querySelectorAll('.arrow-line').forEach(el => el.remove());
+
+        const orangeIds = ['o1','o2','o3','o4','o5','o6','o7','o8'];
+        const yellowIds = ['y1','y2','y3','y4','y5','y6','y7'];
+
+        function getPos(id) {
+            const el = document.getElementById(id);
+            const top = parseFloat(el.style.top || getComputedStyle(el).top) /
+                        document.getElementById('mapContainer').offsetHeight * 100 ||
+                        parseFloat(el.style.top) ||
+                        parseFloat(getComputedStyle(el).top) / document.getElementById('mapContainer').offsetHeight * 100;
+            // Simpler: just read CSS
+            const cs = getComputedStyle(el);
+            const container = document.getElementById('mapContainer');
+            const l = parseFloat(el.style.left || cs.left) / container.offsetWidth * 1000;
+            const t = parseFloat(el.style.top || cs.top) / container.offsetHeight * 1000;
+            // Actually use percentage directly
+            const leftPct = el.style.left ? parseFloat(el.style.left) : null;
+            const topPct = el.style.top ? parseFloat(el.style.top) : null;
+
+            // Fallback: read from stylesheet
+            let lp, tp;
+            if (leftPct !== null && !isNaN(leftPct)) {
+                lp = leftPct;
+            } else {
+                // Parse from computed style (px) to percentage
+                lp = parseFloat(cs.left) / container.offsetWidth * 100;
+            }
+            if (topPct !== null && !isNaN(topPct)) {
+                tp = topPct;
+            } else {
+                tp = parseFloat(cs.top) / container.offsetHeight * 100;
+            }
+            return { x: lp * 10, y: tp * 10 }; // Scale to 0-1000 SVG viewBox
+        }
+
+        function addArrow(ids, markerId, color) {
+            for (let i = 0; i < ids.length - 1; i++) {
+                const p1 = getPos(ids[i]);
+                const p2 = getPos(ids[i+1]);
+                const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+                line.classList.add('arrow-line');
+                line.setAttribute("x1", p1.x);
+                line.setAttribute("y1", p1.y);
+                line.setAttribute("x2", p2.x);
+                line.setAttribute("y2", p2.y);
+                line.setAttribute("stroke", color);
+                line.setAttribute("stroke-width", "2.5");
+                line.setAttribute("stroke-opacity", "0.6");
+                line.setAttribute("marker-end", `url(#${markerId})`);
+                svg.appendChild(line);
+            }
+        }
+
+        addArrow(orangeIds, 'ah-o', '#ed7500');
+        addArrow(yellowIds, 'ah-y', '#f2c000');
+    }
+
+    // Initial zeichnen wenn Bild geladen
+    document.getElementById('mapImg').addEventListener('load', drawArrows);
+    // Auch direkt versuchen (falls cached)
+    if (document.getElementById('mapImg').complete) drawArrows();
+    window.addEventListener('resize', drawArrows);
+
+    // ============================================================
+    // Edit-Modus: Kreise per Drag & Drop verschieben
+    // ============================================================
+    let editMode = false;
+    let dragTarget = null;
+
+    function toggleEdit() {
+        editMode = !editMode;
+        document.body.classList.toggle('edit-mode', editMode);
+        document.getElementById('editBar').classList.toggle('active', editMode);
+        if (editMode) {
+            // Ausgegrautepunkte auch verschiebbar machen
+            document.querySelectorAll('.hotspot').forEach(el => {
+                el.style.pointerEvents = 'all';
+            });
+        } else {
+            // Zurücksetzen
+            document.querySelectorAll('.hotspot.yellow').forEach(el => {
+                el.style.pointerEvents = '';
+            });
+            document.querySelectorAll('#o6,#o7,#o8').forEach(el => {
+                el.style.pointerEvents = 'none';
+            });
+        }
+    }
+
+    document.addEventListener('mousedown', function(e) {
+        if (!editMode) return;
+        const hotspot = e.target.closest('.hotspot');
+        if (!hotspot) return;
+        e.preventDefault();
+        e.stopPropagation();
+        dragTarget = hotspot;
+    });
+
+    document.addEventListener('mousemove', function(e) {
+        if (!dragTarget) return;
+        e.preventDefault();
+        const container = document.getElementById('mapContainer');
+        const rect = container.getBoundingClientRect();
+        const x = ((e.clientX - rect.left) / rect.width * 100);
+        const y = ((e.clientY - rect.top) / rect.height * 100);
+        dragTarget.style.left = x.toFixed(1) + '%';
+        dragTarget.style.top = y.toFixed(1) + '%';
+        drawArrows();
+        // Live-Koordinaten anzeigen
+        document.getElementById('coordOutput').textContent =
+            `${dragTarget.id}: top=${y.toFixed(1)}% left=${x.toFixed(1)}%`;
+    });
+
+    document.addEventListener('mouseup', function() {
+        dragTarget = null;
+    });
+
+    // Klick im Edit-Modus verhindern
+    document.querySelectorAll('.hotspot.orange').forEach(el => {
+        el.addEventListener('click', function(e) {
+            if (editMode) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+        });
+    });
+
+    // Doppelklick = Nummer ändern
+    document.querySelectorAll('.hotspot').forEach(el => {
+        el.addEventListener('dblclick', function(e) {
+            if (!editMode) return;
+            e.preventDefault();
+            e.stopPropagation();
+            const currentNum = this.textContent.trim();
+            const newNum = prompt(`Neue Nummer für diesen Punkt (aktuell: ${currentNum}):`, currentNum);
+            if (newNum !== null && newNum !== '') {
+                // Nummer im Kreis ändern
+                // Der sichtbare Text ist der letzte TextNode
+                const nodes = this.childNodes;
+                for (let i = nodes.length - 1; i >= 0; i--) {
+                    if (nodes[i].nodeType === 3) { // TextNode
+                        nodes[i].textContent = newNum;
+                        break;
+                    }
+                }
+                // Tooltip-Text aktualisieren
+                const tooltip = this.querySelector('.tooltip-text');
+                if (tooltip) {
+                    const oldText = tooltip.textContent;
+                    // Ersetze nur die Nummer am Anfang
+                    tooltip.textContent = oldText.replace(/^\d+/, newNum);
+                }
+                document.getElementById('coordOutput').textContent =
+                    `${this.id}: Nummer geändert zu ${newNum}`;
+            }
+        });
+    });
+
+    function copyPositions() {
+        const allIds = ['o1','o2','o3','o4','o5','o6','o7','o8','y1','y2','y3','y4','y5','y6','y7'];
+        let output = '=== POSITIONEN & NUMMERN ===\n';
+        allIds.forEach(id => {
+            const el = document.getElementById(id);
+            const cs = getComputedStyle(el);
+            const container = document.getElementById('mapContainer');
+            let left, top;
+            if (el.style.left) {
+                left = el.style.left;
+                top = el.style.top;
+            } else {
+                left = (parseFloat(cs.left) / container.offsetWidth * 100).toFixed(1) + '%';
+                top = (parseFloat(cs.top) / container.offsetHeight * 100).toFixed(1) + '%';
+            }
+            // Aktuelle Nummer auslesen
+            let num = '';
+            const nodes = el.childNodes;
+            for (let i = nodes.length - 1; i >= 0; i--) {
+                if (nodes[i].nodeType === 3 && nodes[i].textContent.trim()) {
+                    num = nodes[i].textContent.trim();
+                    break;
+                }
+            }
+            const tooltip = el.querySelector('.tooltip-text');
+            const label = tooltip ? tooltip.textContent : '';
+            output += `${id} | Nr: ${num} | top: ${top} | left: ${left} | ${label}\n`;
+        });
+        navigator.clipboard.writeText(output).then(() => {
+            document.getElementById('coordOutput').textContent = 'Positionen + Nummern in Zwischenablage kopiert!';
+        }).catch(() => {
+            document.getElementById('coordOutput').textContent = output;
+        });
+        console.log(output);
+    }
+    </script>
 
 </body>
 </html>
